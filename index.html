@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Bio-GSPA 生物分析样品前处理绿色度评价系统</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
   <style>
     body {
       margin: 0;
@@ -15,18 +16,20 @@
     header {
       background: linear-gradient(90deg, #1b5e20, #43a047);
       color: white;
-      padding: 20px 40px;
+      padding: 22px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
     }
 
     header h1 {
       margin: 0;
       font-size: 28px;
+      letter-spacing: 1px;
     }
 
     header p {
       margin: 8px 0 0;
       font-size: 14px;
-      opacity: 0.9;
+      opacity: 0.95;
     }
 
     .container {
@@ -38,19 +41,40 @@
 
     .panel {
       background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.08);
     }
 
     h2 {
       color: #1b5e20;
       margin-top: 0;
+      border-bottom: 2px solid #e0f2e9;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      color: #2e7d32;
+      margin-top: 24px;
+    }
+
+    .method-box {
+      margin-bottom: 18px;
+      padding: 14px;
+      background: #f1f8e9;
+      border-radius: 10px;
+      border-left: 5px solid #43a047;
+    }
+
+    .method-box label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
     }
 
     details {
       border: 1px solid #d9e6dc;
-      border-radius: 8px;
+      border-radius: 10px;
       margin-bottom: 12px;
       padding: 12px;
       background: #fbfdfb;
@@ -61,12 +85,26 @@
       font-weight: bold;
       color: #2e7d32;
       font-size: 17px;
+      list-style: none;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::before {
+      content: "▶ ";
+      color: #43a047;
+    }
+
+    details[open] summary::before {
+      content: "▼ ";
     }
 
     .indicator {
       display: grid;
-      grid-template-columns: 1fr 120px;
-      gap: 10px;
+      grid-template-columns: 1fr 130px;
+      gap: 12px;
       align-items: center;
       margin: 12px 0;
       padding-bottom: 8px;
@@ -75,44 +113,173 @@
 
     label {
       font-size: 14px;
+      line-height: 1.5;
     }
 
     select, input {
-      padding: 7px;
+      padding: 8px;
       border: 1px solid #cfd8dc;
       border-radius: 6px;
       width: 100%;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #43a047;
+      box-shadow: 0 0 4px rgba(67,160,71,0.4);
+    }
+
+    button {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 18px;
+      margin: 8px 6px 8px 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #1b5e20;
+    }
+
+    .btn-secondary {
+      background: #607d8b;
+    }
+
+    .btn-secondary:hover {
+      background: #455a64;
+    }
+
+    .btn-danger {
+      background: #c62828;
+    }
+
+    .btn-danger:hover {
+      background: #8e0000;
     }
 
     .score-box {
       text-align: center;
-      padding: 25px;
-      border-radius: 12px;
+      padding: 26px;
+      border-radius: 14px;
       background: #e8f5e9;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
+      border: 1px solid #c8e6c9;
+    }
+
+    .score-title {
+      font-size: 16px;
+      color: #455a64;
+      margin-bottom: 6px;
     }
 
     .score {
-      font-size: 54px;
+      font-size: 56px;
       font-weight: bold;
       color: #1b5e20;
+      line-height: 1.2;
+    }
+
+    .score-percent {
+      font-size: 18px;
+      color: #455a64;
+      margin-top: 4px;
     }
 
     .level {
       display: inline-block;
-      margin-top: 10px;
-      padding: 8px 20px;
-      border-radius: 20px;
+      margin-top: 12px;
+      padding: 8px 22px;
+      border-radius: 22px;
       color: white;
       font-weight: bold;
+      font-size: 15px;
     }
 
-    .green-dark { background: #1b5e20; }
-    .green { background: #43a047; }
-    .yellowgreen { background: #8bc34a; }
-    .yellow { background: #fbc02d; color: #333; }
-    .orange { background: #ef6c00; }
-    .red { background: #c62828; }
+    .excellent {
+      background: #1b5e20;
+    }
+
+    .good {
+      background: #f9a825;
+      color: #263238;
+    }
+
+    .poor {
+      background: #c62828;
+    }
+
+    .green-dark {
+      background: #1b5e20;
+    }
+
+    .green {
+      background: #43a047;
+    }
+
+    .yellowgreen {
+      background: #8bc34a;
+      color: #263238;
+    }
+
+    .yellow {
+      background: #fbc02d;
+      color: #263238;
+    }
+
+    .orange {
+      background: #ef6c00;
+    }
+
+    .red {
+      background: #c62828;
+    }
+
+    .chart-card {
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 18px;
+      border: 1px solid #eeeeee;
+    }
+
+    .radar-legend {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin: 12px 0 4px;
+      font-size: 14px;
+    }
+
+    .radar-legend span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .radar-legend i {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    .legend-green {
+      background: #2e7d32;
+    }
+
+    .legend-yellow {
+      background: #fbc02d;
+    }
+
+    .legend-red {
+      background: #c62828;
+    }
 
     table {
       width: 100%;
@@ -123,12 +290,17 @@
 
     th, td {
       border: 1px solid #e0e0e0;
-      padding: 8px;
+      padding: 9px;
       text-align: center;
     }
 
     th {
       background: #e8f5e9;
+      color: #1b5e20;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #fafafa;
     }
 
     .suggestion {
@@ -137,20 +309,39 @@
       padding: 15px;
       margin-top: 20px;
       border-radius: 8px;
+      line-height: 1.7;
     }
 
-    button {
-      background: #2e7d32;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 18px;
-      margin: 8px 5px 8px 0;
-      cursor: pointer;
+    .suggestion ul {
+      margin-top: 8px;
     }
 
-    button:hover {
-      background: #1b5e20;
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      background: #f5f5f5;
+      border: 1px solid #e0e0e0;
+    }
+
+    .summary-item strong {
+      display: block;
+      font-size: 20px;
+      color: #2e7d32;
+      margin-top: 4px;
+    }
+
+    @media (max-width: 1000px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -159,7 +350,7 @@
 
 <header>
   <h1>Bio-GSPA 生物分析样品前处理绿色度评价系统</h1>
-  <p>Green Sample Pretreatment Analyzer for Bioanalysis</p>
+  <p>Green Sample Pretreatment Analyzer for Bioanalysis | 面向生物分析样品前处理的绿色度算法评价程序</p>
 </header>
 
 <div class="container">
@@ -168,13 +359,16 @@
   <div class="panel">
     <h2>一、参数输入</h2>
 
-    <label>方法名称：</label>
-    <input id="methodName" value="方法1：蛋白沉淀-液相色谱法">
+    <div class="method-box">
+      <label for="methodName">方法名称</label>
+      <input id="methodName" value="方法1：蛋白沉淀-液相色谱法">
+    </div>
 
     <div id="inputArea"></div>
 
     <button onclick="calculate()">计算绿色度</button>
-    <button onclick="resetScores()">重置</button>
+    <button class="btn-secondary" onclick="resetScores()">重置为满分</button>
+    <button class="btn-danger" onclick="setExampleLow()">示例：不理想方法</button>
     <button onclick="exportResult()">导出结果</button>
   </div>
 
@@ -183,15 +377,42 @@
     <h2>二、评价结果</h2>
 
     <div class="score-box">
-      <div>综合 GSPA 得分</div>
+      <div class="score-title">综合 GSPA 得分，0–5 分制</div>
       <div id="totalScore" class="score">--</div>
+      <div id="scorePercent" class="score-percent">百分制：--</div>
       <div id="levelText" class="level green">待计算</div>
     </div>
 
-    <canvas id="radarChart" height="260"></canvas>
+    <div class="summary-grid">
+      <div class="summary-item">
+        最高维度
+        <strong id="bestDimension">--</strong>
+      </div>
+      <div class="summary-item">
+        最低维度
+        <strong id="worstDimension">--</strong>
+      </div>
+      <div class="summary-item">
+        低分指标数
+        <strong id="weakCount">--</strong>
+      </div>
+    </div>
 
-    <h3>一级指标得分</h3>
-    <canvas id="barChart" height="180"></canvas>
+    <div class="chart-card">
+      <h3>绿色度雷达图</h3>
+      <canvas id="radarChart" height="280"></canvas>
+
+      <div class="radar-legend">
+        <span><i class="legend-green"></i> 优秀绿色度：4.0–5.0</span>
+        <span><i class="legend-yellow"></i> 良好绿色度：3.0–3.99</span>
+        <span><i class="legend-red"></i> 不理想绿色度：0–2.99</span>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>一级指标柱状图</h3>
+      <canvas id="barChart" height="190"></canvas>
+    </div>
 
     <h3>二级指标评分表</h3>
     <table id="scoreTable">
@@ -200,6 +421,7 @@
           <th>一级指标</th>
           <th>二级指标</th>
           <th>得分</th>
+          <th>等级</th>
         </tr>
       </thead>
       <tbody></tbody>
@@ -218,6 +440,7 @@ const dimensions = [
   {
     key: "collection",
     name: "A. 样品采集与保存",
+    shortName: "样品采集与保存",
     weight: 0.10,
     indicators: [
       ["A1 采样量", 0.03],
@@ -229,6 +452,7 @@ const dimensions = [
   {
     key: "reagent",
     name: "B. 试剂与溶剂消耗",
+    shortName: "试剂与溶剂",
     weight: 0.22,
     indicators: [
       ["B1 试剂毒性综合风险当量", 0.07],
@@ -241,6 +465,7 @@ const dimensions = [
   {
     key: "energy",
     name: "C. 能源效率与微型化",
+    shortName: "能源与微型化",
     weight: 0.12,
     indicators: [
       ["C1 单样本前处理能耗", 0.05],
@@ -251,6 +476,7 @@ const dimensions = [
   {
     key: "waste",
     name: "D. 废物管理与环境归趋",
+    shortName: "废物管理",
     weight: 0.14,
     indicators: [
       ["D1 单样本废弃物总产生量", 0.05],
@@ -262,6 +488,7 @@ const dimensions = [
   {
     key: "workflow",
     name: "E. 操作流程与自动化",
+    shortName: "流程与自动化",
     weight: 0.12,
     indicators: [
       ["E1 前处理步骤数量", 0.04],
@@ -273,6 +500,7 @@ const dimensions = [
   {
     key: "performance",
     name: "F. 方法性能与生物相容性",
+    shortName: "性能与生物相容性",
     weight: 0.15,
     indicators: [
       ["F1 方法验证完整度", 0.05],
@@ -285,6 +513,7 @@ const dimensions = [
   {
     key: "safety",
     name: "G. 本质安全与人员防护",
+    shortName: "安全与防护",
     weight: 0.15,
     indicators: [
       ["G1 操作密闭性", 0.04],
@@ -308,16 +537,20 @@ function buildInputs() {
     detail.open = true;
 
     const summary = document.createElement("summary");
-    summary.innerText = `${dim.name}，权重 ${(dim.weight * 100).toFixed(0)}%`;
+    summary.innerText = `${dim.name}，一级权重 ${(dim.weight * 100).toFixed(0)}%`;
     detail.appendChild(summary);
 
     dim.indicators.forEach((ind, index) => {
       const id = `${dim.key}_${index}`;
       const div = document.createElement("div");
       div.className = "indicator";
+
       div.innerHTML = `
-        <label>${ind[0]}，权重 ${(ind[1] * 100).toFixed(0)}%</label>
-        <select id="${id}">
+        <label for="${id}">
+          ${ind[0]}<br>
+          <small>二级权重 ${(ind[1] * 100).toFixed(0)}%</small>
+        </label>
+        <select id="${id}" onchange="calculate()">
           <option value="5">5 极优</option>
           <option value="4">4 良好</option>
           <option value="3">3 中等</option>
@@ -326,6 +559,7 @@ function buildInputs() {
           <option value="0">0 高风险</option>
         </select>
       `;
+
       detail.appendChild(div);
     });
 
@@ -351,72 +585,117 @@ function calculate() {
       dimWeightedSum += score * weight;
       dimWeightSum += weight;
 
+      const grade = getGradeName(score);
+
       tableRows += `
         <tr>
           <td>${dim.name}</td>
           <td>${ind[0]}</td>
-          <td style="background:${scoreColor(score)};color:white;font-weight:bold;">${score.toFixed(1)}</td>
+          <td style="background:${scoreColor(score)};color:${score >= 3 && score < 4 ? '#263238' : 'white'};font-weight:bold;">
+            ${score.toFixed(1)}
+          </td>
+          <td>${grade}</td>
         </tr>
       `;
 
-      if (score <= 2) {
+      if (score < 3) {
         weakIndicators.push(ind[0]);
       }
     });
 
     const dimScore = dimWeightedSum / dimWeightSum;
+
     dimensionScores.push({
-      name: dim.name.substring(3),
+      name: dim.shortName,
+      fullName: dim.name,
       score: dimScore
     });
 
     total += dimScore * dim.weight;
   });
 
+  const percent = total * 20;
+
   document.getElementById("totalScore").innerText = total.toFixed(2);
-  setLevel(total);
+  document.getElementById("scorePercent").innerText = `百分制：${percent.toFixed(1)} / 100`;
   document.querySelector("#scoreTable tbody").innerHTML = tableRows;
-  drawCharts(dimensionScores);
-  generateSuggestions(total, weakIndicators);
+
+  setLevel(total);
+  drawCharts(dimensionScores, total);
+  generateSuggestions(total, weakIndicators, dimensionScores);
+  updateSummary(dimensionScores, weakIndicators);
+}
+
+function updateSummary(dimensionScores, weakIndicators) {
+  const sorted = [...dimensionScores].sort((a, b) => b.score - a.score);
+
+  document.getElementById("bestDimension").innerText =
+    `${sorted[0].name} ${sorted[0].score.toFixed(2)}`;
+
+  document.getElementById("worstDimension").innerText =
+    `${sorted[sorted.length - 1].name} ${sorted[sorted.length - 1].score.toFixed(2)}`;
+
+  document.getElementById("weakCount").innerText = weakIndicators.length;
+}
+
+function getRadarColor(score) {
+  if (score >= 4.0) {
+    return {
+      level: "优秀绿色度",
+      border: "#1b5e20",
+      background: "rgba(46, 125, 50, 0.30)",
+      point: "#1b5e20"
+    };
+  } else if (score >= 3.0) {
+    return {
+      level: "良好绿色度",
+      border: "#f9a825",
+      background: "rgba(251, 192, 45, 0.28)",
+      point: "#f9a825"
+    };
+  } else {
+    return {
+      level: "不理想绿色度",
+      border: "#c62828",
+      background: "rgba(198, 40, 40, 0.25)",
+      point: "#c62828"
+    };
+  }
+}
+
+function getGradeName(score) {
+  if (score >= 4.0) return "优秀绿色度";
+  if (score >= 3.0) return "良好绿色度";
+  return "不理想绿色度";
+}
+
+function scoreColor(score) {
+  if (score >= 4.0) return "#2e7d32";
+  if (score >= 3.0) return "#fbc02d";
+  return "#c62828";
 }
 
 function setLevel(score) {
   const level = document.getElementById("levelText");
   level.className = "level";
 
-  if (score >= 4.5) {
-    level.innerText = "极绿色";
-    level.classList.add("green-dark");
-  } else if (score >= 3.75) {
-    level.innerText = "绿色";
-    level.classList.add("green");
+  if (score >= 4.0) {
+    level.innerText = "优秀绿色度";
+    level.classList.add("excellent");
   } else if (score >= 3.0) {
-    level.innerText = "中等绿色";
-    level.classList.add("yellowgreen");
-  } else if (score >= 2.0) {
-    level.innerText = "待改进";
-    level.classList.add("yellow");
-  } else if (score >= 1.0) {
-    level.innerText = "不绿色";
-    level.classList.add("orange");
+    level.innerText = "良好绿色度";
+    level.classList.add("good");
   } else {
-    level.innerText = "高环境风险";
-    level.classList.add("red");
+    level.innerText = "不理想绿色度";
+    level.classList.add("poor");
   }
 }
 
-function scoreColor(score) {
-  if (score >= 4.5) return "#1b5e20";
-  if (score >= 3.75) return "#43a047";
-  if (score >= 3) return "#8bc34a";
-  if (score >= 2) return "#fbc02d";
-  if (score >= 1) return "#ef6c00";
-  return "#c62828";
-}
-
-function drawCharts(data) {
+function drawCharts(data, totalScore) {
   const labels = data.map(d => d.name);
-  const scores = data.map(d => d.score.toFixed(2));
+  const scores = data.map(d => Number(d.score.toFixed(2)));
+
+  const radarColor = getRadarColor(totalScore);
 
   if (radarChart) radarChart.destroy();
   if (barChart) barChart.destroy();
@@ -425,20 +704,85 @@ function drawCharts(data) {
     type: "radar",
     data: {
       labels: labels,
-      datasets: [{
-        label: "一级指标得分",
-        data: scores,
-        backgroundColor: "rgba(76, 175, 80, 0.25)",
-        borderColor: "#2e7d32",
-        pointBackgroundColor: "#1b5e20"
-      }]
+      datasets: [
+        {
+          label: radarColor.level,
+          data: scores,
+          backgroundColor: radarColor.background,
+          borderColor: radarColor.border,
+
+          // 每个一级指标节点按照自身得分独立着色
+          pointBackgroundColor: scores.map(score => {
+            if (score >= 4.0) return "#2e7d32";
+            if (score >= 3.0) return "#fbc02d";
+            return "#c62828";
+          }),
+
+          pointBorderColor: "#ffffff",
+          pointRadius: 6,
+          pointHoverRadius: 8,
+          borderWidth: 3
+        }
+      ]
     },
     options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            font: {
+              size: 14,
+              weight: "bold"
+            }
+          }
+        },
+        title: {
+          display: true,
+          text: "Bio-GSPA 绿色度雷达图",
+          font: {
+            size: 18,
+            weight: "bold"
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const score = context.raw;
+              return `${context.dataset.label}：${score} 分，${getGradeName(score)}`;
+            }
+          }
+        }
+      },
       scales: {
         r: {
           min: 0,
           max: 5,
-          ticks: { stepSize: 1 }
+          ticks: {
+            stepSize: 1,
+            color: "#555",
+            backdropColor: "transparent"
+          },
+          grid: {
+            color: function(context) {
+              if (context.tick.value <= 2) {
+                return "rgba(198, 40, 40, 0.28)";
+              } else if (context.tick.value <= 4) {
+                return "rgba(251, 192, 45, 0.35)";
+              } else {
+                return "rgba(46, 125, 50, 0.35)";
+              }
+            }
+          },
+          angleLines: {
+            color: "rgba(0, 0, 0, 0.16)"
+          },
+          pointLabels: {
+            color: "#37474f",
+            font: {
+              size: 12,
+              weight: "bold"
+            }
+          }
         }
       }
     }
@@ -449,53 +793,94 @@ function drawCharts(data) {
     data: {
       labels: labels,
       datasets: [{
-        label: "得分",
+        label: "一级指标得分",
         data: scores,
-        backgroundColor: "#66bb6a"
+        backgroundColor: scores.map(score => {
+          if (score >= 4.0) return "#2e7d32";
+          if (score >= 3.0) return "#fbc02d";
+          return "#c62828";
+        }),
+        borderColor: scores.map(score => {
+          if (score >= 4.0) return "#1b5e20";
+          if (score >= 3.0) return "#f9a825";
+          return "#b71c1c";
+        }),
+        borderWidth: 1
       }]
     },
     options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        title: {
+          display: true,
+          text: "一级指标绿色度柱状图",
+          font: {
+            size: 16,
+            weight: "bold"
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const score = context.raw;
+              return `得分：${score}，${getGradeName(score)}`;
+            }
+          }
+        }
+      },
       scales: {
         y: {
           min: 0,
-          max: 5
+          max: 5,
+          ticks: {
+            stepSize: 1
+          }
         }
       }
     }
   });
 }
 
-function generateSuggestions(total, weakIndicators) {
+function generateSuggestions(total, weakIndicators, dimensionScores) {
   let html = "";
 
-  if (total >= 4.5) {
-    html += "该方法整体绿色度极高，可作为生物分析样品前处理的优选方案。";
-  } else if (total >= 3.75) {
-    html += "该方法具有较好的绿色性，但仍可针对低分指标进一步优化。";
+  if (total >= 4.0) {
+    html += "该方法整体属于<strong>优秀绿色度</strong>，说明其在试剂消耗、能耗控制、废物管理、操作安全和方法性能方面表现较好，可作为生物分析样品前处理的优选方案。";
   } else if (total >= 3.0) {
-    html += "该方法绿色度中等，建议重点减少有机溶剂、危险废物和开放操作。";
+    html += "该方法整体属于<strong>良好绿色度</strong>，具有一定绿色优势，但仍存在可优化环节。建议针对低分维度进行改进，以进一步提高方法绿色化水平。";
   } else {
-    html += "该方法绿色度较低，不建议直接作为绿色前处理方法，应进行系统优化。";
+    html += "该方法整体属于<strong>不理想绿色度</strong>，说明其可能存在有机溶剂消耗较大、废弃物产生较多、操作步骤复杂或安全风险较高等问题，建议进行系统优化后再应用。";
   }
 
+  const sorted = [...dimensionScores].sort((a, b) => a.score - b.score);
+  const worst = sorted[0];
+
+  html += `<br><br><strong>最需要优化的一级维度：</strong>${worst.fullName}，得分 ${worst.score.toFixed(2)}。`;
+
   if (weakIndicators.length > 0) {
-    html += "<br><br><strong>低分指标：</strong><ul>";
+    html += "<br><br><strong>低分二级指标：</strong><ul>";
     weakIndicators.forEach(item => {
       html += `<li>${item}</li>`;
     });
     html += "</ul>";
-
-    html += `
-      <strong>优化方向：</strong>
-      <ul>
-        <li>优先减少有机溶剂体积，尝试水相、生物基溶剂或微萃取技术。</li>
-        <li>减少离心、氮吹、加热、冷冻等高能耗步骤。</li>
-        <li>降低一次性塑料耗材使用量，提高样品前处理微型化程度。</li>
-        <li>采用密闭或在线前处理系统，降低气溶胶和蒸气暴露。</li>
-        <li>完善方法验证，确保绿色化改进不牺牲准确性和可靠性。</li>
-      </ul>
-    `;
+  } else {
+    html += "<br><br>未发现低于 3 分的二级指标，说明该方法各项指标较均衡。";
   }
+
+  html += `
+    <strong>通用优化建议：</strong>
+    <ul>
+      <li>优先减少甲醇、乙腈、氯仿、二氯甲烷等有机溶剂用量，尝试水相、生物基溶剂或微萃取技术。</li>
+      <li>减少离心、氮吹、加热、冷冻、长时间振荡等高能耗步骤。</li>
+      <li>降低一次性塑料离心管、移液枪头、滤膜等耗材使用量。</li>
+      <li>采用密闭式或在线样品前处理系统，降低有害蒸气和生物气溶胶暴露。</li>
+      <li>加强生物危害废物分类收集、灭活和无害化处置。</li>
+      <li>在绿色化改进的同时，保持方法准确度、精密度、回收率、基质效应和稳定性等验证指标。</li>
+    </ul>
+  `;
 
   document.getElementById("suggestions").innerHTML = html;
 }
@@ -505,16 +890,40 @@ function resetScores() {
   calculate();
 }
 
+function setExampleLow() {
+  const values = [2, 1, 2, 3, 1, 2, 1, 2, 3, 2, 1, 2, 2, 1, 2, 3, 2, 1, 2, 2, 3, 1, 2, 2, 1, 2, 2, 1, 2, 3];
+
+  let i = 0;
+  document.querySelectorAll("select").forEach(sel => {
+    sel.value = values[i % values.length];
+    i++;
+  });
+
+  document.getElementById("methodName").value = "示例：传统液液萃取法";
+  calculate();
+}
+
 function exportResult() {
   const method = document.getElementById("methodName").value;
   const score = document.getElementById("totalScore").innerText;
+  const percent = document.getElementById("scorePercent").innerText;
   const level = document.getElementById("levelText").innerText;
+  const best = document.getElementById("bestDimension").innerText;
+  const worst = document.getElementById("worstDimension").innerText;
+  const weak = document.getElementById("weakCount").innerText;
 
   const content = `
 Bio-GSPA 生物分析样品前处理绿色度评价结果
+
 方法名称：${method}
-综合得分：${score}
+综合得分：${score} / 5
+${percent}
 绿色等级：${level}
+
+最高维度：${best}
+最低维度：${worst}
+低分指标数：${weak}
+
 导出时间：${new Date().toLocaleString()}
   `;
 
